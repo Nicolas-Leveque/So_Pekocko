@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const sauce = require('./models/sauce')
 
 const app = express()
 
@@ -26,13 +27,24 @@ app.use((req, res, next) => {
 })
 
 app.post('/api/sauces', (req, res, next) => {
-  console.log(req.body)
-  res.status(201).json({ message: 'Sauces ajoutée' })
+  const sauce = new sauce({
+    ...req.body
+  });
+  sauce.save()
+    .then(() => res.status(201).json({ message: 'Sauce ajoutée'}))
+    .catch(error => res.status(400).json({ error }));
+});
+
+app.get('/api.sauces/:id', (req, res, next) => {
+  sauce.findOne({ _id: req.params.id })
+  .then(sauce => res.status(200).json(sauce))
+  .catch(error => res.status(400).json({ error }));
 })
 
 app.get('/api/sauces', (req, res) => {
-  console.log('requête ok')
-  res.status(200).json({ message: 'requete ok' })
-})
+  sauce.find()
+    .then(sauces => res.status(200).json(sauces))
+    .catch(error => res.status(404).json({ error }));
+});
 
 module.exports = app
