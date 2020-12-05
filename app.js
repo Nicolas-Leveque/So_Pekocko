@@ -5,9 +5,7 @@ const Sauce = require('./models/sauce')
 
 const app = express()
 
-mongoose
-  .connect(
-    'mongodb+srv://admin:UbiBQU9DHulsCgml@cluster0.wxmc5.mongodb.net/test?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://admin:UbiBQU9DHulsCgml@cluster0.wxmc5.mongodb.net/test?retryWrites=true&w=majority',
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log('Connexion à MongoDB réussie'))
@@ -22,20 +20,30 @@ app.use((req, res, next) => {
 })
 
 app.post('/api/sauces', (req, res, next) => {
-  console.log(req.body)
   const sauce = new Sauce({
     ...req.body
   });
-  console.log(sauce)
   sauce.save()
     .then(() => res.status(201).json({ message: 'Sauce ajoutée'}))
     .catch(error => res.status(400).json({ error }));
 });
 
-app.get('/api.sauces/:id', (req, res, next) => {
+app.put('/api/sauces/:id', (req, res, next) => {
+  Sauce.updateOne({ _id: req.params.id}, { ...req.body, _id: req.params.id})
+    .then(() => res.status(200).json({ Message: 'Sauce modifiée' }))
+    .catch(error => res.status(400).json({ error }))
+})
+
+app.delete('/api/sauces/:id', (req, res, next) => {
+  Sauce.deleteOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message:'Sauce supprimée' }))
+    .catch(error => res.status(400).json({error}))
+})
+
+app.get('/api/sauces/:id', (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
   .then(sauce => res.status(200).json(sauce))
-  .catch(error => res.status(400).json({ error }));
+  .catch(error => res.status(404).json({ error }));
 })
 
 app.get('/api/sauces', (req, res) => {
