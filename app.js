@@ -8,11 +8,11 @@ const app = express()
 
 mongoose
   .connect(
-    'mongodb+srv://admin:UbiBQU9DHulsCgml@cluster0.wxmc5.mongodb.net/test?retryWrites=true&w=majority',
+    'mongodb+srv://admin:UbiBQU9DHulsCgml@cluster0.wxmc5.mongodb.net/so_pekocko?retryWrites=true&w=majority',
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
-  .then(() => console.log('Connexion à MongoDB réussie'))
-  .catch(() => console.log('Connexion à MongDB échouée'))
+  .then(() => console.log('Connection to MongoDB successful'))
+  .catch(() => console.log('Connection to MongDB failed'))
 
 app.use(express.json())
 app.use(sauceRouter)
