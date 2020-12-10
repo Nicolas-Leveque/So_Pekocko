@@ -45,3 +45,14 @@ userSchema.pre('save', async function (next) {
 })
 
 module.exports = mongoose.model('User', userSchema)
+
+userSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    user.password = await bcrypt.hash(user.password, 8)
+  }
+  next()
+})
+
+const User = mongoose.model('User', userSchema)
+
+module.exports = User
