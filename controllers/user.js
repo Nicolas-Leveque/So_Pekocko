@@ -22,7 +22,12 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       throw new Error('Erreur de connexion')
     }
-    res.status(200).json({ userId: user._id, token: 'TOKEN' })
+    res.status(200).json({
+      userId: user._id,
+      token: jwt.sign({ userId: user._id }, 'soPekockoAuthToken', {
+        expiresIn: '7d',
+      }),
+    })
   } catch (e) {
     res.status(400).send()
   }
