@@ -8,15 +8,13 @@ const app = express()
 
 mongoose
   .connect(
-    'mongodb+srv://admin:UbiBQU9DHulsCgml@cluster0.wxmc5.mongodb.net/test?retryWrites=true&w=majority',
+    'mongodb+srv://admin:UbiBQU9DHulsCgml@cluster0.wxmc5.mongodb.net/so_pekocko?retryWrites=true&w=majority',
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log('Connexion à MongoDB réussie'))
   .catch(() => console.log('Connexion à MongDB échouée'))
 
 app.use(express.json())
-app.use(sauceRouter)
-app.use(userRouter)
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -30,5 +28,9 @@ app.use((req, res, next) => {
   )
   next()
 })
+
+app.use(bodyParser.json())
+app.use('/api/sauces', sauceRouter)
+app.use('/api/auth', userRouter)
 
 module.exports = app
