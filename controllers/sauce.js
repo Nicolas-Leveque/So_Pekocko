@@ -1,60 +1,59 @@
+const fs = require('fs')
 const Sauce = require('../models/sauce')
 
 exports.createSauce = async (req, res) => {
-  const sauce = new Sauce(req.body)
   try {
+    const sauceObject = JSON.parse(req.body.sauce)
+    // delete sauceObject._id
+    const sauce = new Sauce({
+      ...sauceObject,
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${
+        req.file.filename
+      }`,
+    })
+
     await sauce.save()
-    res.send(sauce)
+    res.status(201).send({ message: 'Sauce enregistrée' })
   } catch (e) {
     res.status(500).send(e)
   }
 }
 
 exports.modifySauce = async (req, res) => {
-  const updates = Object.keys(req.body)
-  const allowedUpdates = [
-    'userID',
-    'name',
-    'manufacturer',
-    'description',
-    'mainingredient',
-    'imageUrl',
-    'heat',
-    'likes',
-    'dislikes',
-    'usersliked',
-    'usersdisliked',
-  ]
-  const isValidOperation = updates.every((update) =>
-    allowedUpdates.includes(update)
-  )
-  if (!isValidOperation) {
-    res.status(400).send('Invalid update')
-  }
   try {
-    const sauce = await Sauce.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    })
+    const sauceObject = req.file
+      ? {
+          ...JSON.parse(req.body.sauce),
+          imageUrl: `${req.protocol}://${req.get('host')}/images/${
+            req.file.filename
+          }`,
+        }
+      : { ...req.body }
+
+    const sauce = await Sauce.updateOne(
+      { _id: req.params.id },
+      { ...sauceObject, _id: req.params.id }
+    )
     if (!sauce) {
       res.status(404).send()
     }
-    res.send(sauce)
+    res.send({ message: 'Sauce modifiée' })
   } catch (e) {
     res.status(500).send(e)
   }
 }
 
 exports.deleteSauce = async (req, res) => {
-  try {
-    await Sauce.findByIdAndDelete(req.params.id)
-    if (!sauce) {
-      res.status(404).send()
-    }
-    res.send(sauce)
-  } catch (e) {
-    res.status(500).send(e)
-  }
+  Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => {
+      const filename = sauce.imageUrl.split('/images/')[1]
+      fs.unlink(`images/${filename}`, () => {
+        Sauce.deleteOne({ _id: req.params.id })
+          .then(() => res.status(200).json({ message: 'sauce supprimée' }))
+          .catch((error) => res.status(400).json({ error }))
+      })
+    })
+    .catch((error) => res.status(500).json({ error }))
 }
 
 exports.getOneSauce = async (req, res) => {
@@ -76,4 +75,10 @@ exports.getAllSauces = async (req, res) => {
   } catch (e) {
     res.status(500).send()
   }
+}
+
+exports.likesSauce = async (req, res) => {
+  try {
+    console.log(req.body)
+  } catch {}
 }
