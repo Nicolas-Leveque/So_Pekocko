@@ -4,7 +4,6 @@ const Sauce = require('../models/sauce');
 exports.createSauce = async (req, res) => {
   try {
     const sauceObject = JSON.parse(req.body.sauce);
-    // delete sauceObject._id
     const sauce = new Sauce({
       ...sauceObject,
       imageUrl: `${req.protocol}://${req.get('host')}/images/${
@@ -85,13 +84,6 @@ exports.likesSauce = async (req, res) => {
     let sauce;
     switch (req.body.like) {
       case 1:
-        // if (
-        //   oldSauce.usersDisliked.includes(req.body.userId) ||
-        //   oldSauce.usersLiked.includes(req.body.userId)
-        // ) {
-        //   res.status(400).send();
-        //   console.log('arrêt');
-        // }
         oldSauce.usersLiked.push(req.body.userId);
         sauce = await Sauce.updateOne(
           { _id: req.params.id },
@@ -103,12 +95,6 @@ exports.likesSauce = async (req, res) => {
         res.send({ message: 'sauce modifiée' });
         break;
       case -1:
-        // if (
-        //   oldSauce.usersDisliked.includes(req.body.userId) ||
-        //   oldSauce.usersLiked.includes(req.body.userId)
-        // ) {
-        //   res.status(400).send();
-        // }
         oldSauce.usersDisliked.push(req.body.userId);
         sauce = await Sauce.updateOne(
           { _id: req.params.id },
