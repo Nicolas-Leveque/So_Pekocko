@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { send } = require('process');
 const Sauce = require('../models/sauce');
 
 exports.createSauce = async (req, res) => {
@@ -28,7 +29,14 @@ exports.modifySauce = async (req, res) => {
           }`,
         }
       : { ...req.body };
-
+    if (sauceObject.imageUrl) {
+      console.log(req.params);
+      const sauce = await Sauce.findOne({ _id: req.params.id });
+      console.log(sauce);
+      const filename = sauce.imageUrl.split('/images/')[1];
+      console.log(filename);
+      fs.unlinkSync(`images/${filename}`);
+    }
     const sauce = await Sauce.updateOne(
       { _id: req.params.id },
       { ...sauceObject, _id: req.params.id }
@@ -43,16 +51,15 @@ exports.modifySauce = async (req, res) => {
 };
 
 exports.deleteSauce = async (req, res) => {
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => {
-      const filename = sauce.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, () => {
-        Sauce.deleteOne({ _id: req.params.id })
-          .then(() => res.status(200).json({ message: 'sauce supprimée' }))
-          .catch((error) => res.status(400).json({ error }));
-      });
-    })
-    .catch((error) => res.status(500).json({ error }));
+  try {
+    const sauce = await Sauce.findOne({ _id: req.params.id });
+    const filename = sauce.imageUrl.split('/images/')[1];
+    fs.unlinkSync(`images/${filename}`);
+    await Sauce.deleteOne({ _id: req.params.id });
+    res.status(200).json({ message: 'sauce supprimée' });
+  } catch (e) {
+    send(e);
+  }
 };
 
 exports.getOneSauce = async (req, res) => {
