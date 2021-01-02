@@ -1,16 +1,17 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const uniqueValidator = require('mongoose-unique-validator');
-const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose')
+const validator = require('validator')
+const uniqueValidator = require('mongoose-unique-validator')
+const bcrypt = require('bcryptjs')
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
     unique: true,
+    trim: true,
     validate(value) {
       if (!validator.isEmail(value)) {
-        throw new Error('Adresse email invalide');
+        throw new Error('Adresse email invalide')
       }
     },
   },
@@ -18,20 +19,20 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    minlength: 7,
   },
-});
+})
 
-userSchema.plugin(uniqueValidator);
-
-module.exports = mongoose.model('User', userSchema);
+userSchema.plugin(uniqueValidator)
 
 userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
-    user.password = await bcrypt.hash(user.password, 8);
+  const user = this
+  if (user.isModified('password')) {
+    user.password = await bcrypt.hash(user.password, 8)
   }
-  next();
-});
+  next()
+})
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema)
 
-module.exports = User;
+module.exports = User
