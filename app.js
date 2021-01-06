@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const mongoSanitize = require('express-mongo-sanitize')
 const sauceRouter = require('./router/sauce')
 const userRouter = require('./router/user')
 require('dotenv').config()
@@ -33,6 +34,12 @@ app.use((req, res, next) => {
 app.use(bodyParser.json())
 
 app.use('/images', express.static(path.join(__dirname, 'images')))
+
+app.use(
+  mongoSanitize({
+    replaceWith: '_',
+  })
+)
 
 app.use('/api/sauces', sauceRouter)
 app.use('/api/auth', userRouter)

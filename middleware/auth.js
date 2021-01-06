@@ -11,7 +11,6 @@ const auth = async (req, res, next) => {
     if (!user) {
       throw new Error()
     }
-    // req.body.userID = user._id
     next()
   } catch (e) {
     res.status(401).send({ error: 'Please authenticate' })
