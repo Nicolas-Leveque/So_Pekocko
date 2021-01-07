@@ -17,4 +17,15 @@ const storage = multer.diskStorage({
   },
 })
 
-module.exports = multer({ storage: storage }).single('image')
+module.exports = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1000000,
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      return cb(new Error('Merci de choisir un fichier image'))
+    }
+    cb(undefined, true)
+  },
+}).single('image')

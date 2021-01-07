@@ -1,11 +1,40 @@
 const mongoose = require('mongoose')
+const validator = require('validator')
 
 const sauceSchema = mongoose.Schema({
   userId: { type: String, required: true },
-  name: { type: String, required: true, maxlength: 32 },
-  manufacturer: { type: String, required: true, maxlength: 32 },
-  description: { type: String, required: true, maxlength: 128 },
-  mainPepper: { type: String, required: true, maxlength: 16 },
+  name: {
+    type: String,
+    required: true,
+    maxlength: 32,
+    validate(value) {
+      validator.escape(value)
+    },
+  },
+  manufacturer: {
+    type: String,
+    required: true,
+    maxlength: 32,
+    validate(value) {
+      validator.escape(value)
+    },
+  },
+  description: {
+    type: String,
+    required: true,
+    maxlength: 128,
+    validate(value) {
+      validator.escape(value)
+    },
+  },
+  mainPepper: {
+    type: String,
+    required: true,
+    maxlength: 16,
+    validate(value) {
+      validator.escape(value)
+    },
+  },
   imageUrl: { type: String, required: true },
   heat: { type: Number, required: true },
   likes: { type: Number, default: 0 },
