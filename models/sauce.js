@@ -7,33 +7,25 @@ const sauceSchema = mongoose.Schema({
     type: String,
     required: true,
     maxlength: 32,
-    validate(value) {
-      validator.escape(value)
-    },
+    set: sanitizeEntries,
   },
   manufacturer: {
     type: String,
     required: true,
     maxlength: 32,
-    validate(value) {
-      validator.escape(value)
-    },
+    set: sanitizeEntries,
   },
   description: {
     type: String,
     required: true,
     maxlength: 128,
-    validate(value) {
-      validator.escape(value)
-    },
+    set: sanitizeEntries,
   },
   mainPepper: {
     type: String,
     required: true,
     maxlength: 16,
-    validate(value) {
-      validator.escape(value)
-    },
+    set: sanitizeEntries,
   },
   imageUrl: { type: String, required: true },
   heat: { type: Number, required: true },
@@ -42,6 +34,10 @@ const sauceSchema = mongoose.Schema({
   usersLiked: { type: [String], default: [] },
   usersDisliked: { type: [String], default: [] },
 })
+
+function sanitizeEntries(value) {
+  return validator.escape(value)
+}
 
 const Sauce = mongoose.model('Sauce', sauceSchema)
 
