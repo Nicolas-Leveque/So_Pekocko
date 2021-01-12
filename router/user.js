@@ -3,12 +3,10 @@ const ExpressBrute = require('express-brute')
 const router = express.Router()
 
 const userCtrl = require('../controllers/user')
-
-const store = new ExpressBrute.MemoryStore()
-const bruteforce = new ExpressBrute(store)
+const bruteforce = require('../middleware/brute')
 
 router.post('/signup', userCtrl.signup)
 
-router.post('/login', userCtrl.login)
+router.post('/login', bruteforce.prevent, userCtrl.login)
 
 module.exports = router
