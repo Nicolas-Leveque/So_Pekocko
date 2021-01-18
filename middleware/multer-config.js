@@ -1,4 +1,5 @@
 const multer = require('multer')
+const filteringFiles = require('../middleware/filter')
 
 const MIME_TYPES = {
   'image/jpg': 'jpg',
@@ -11,21 +12,26 @@ const storage = multer.diskStorage({
     callback(null, 'images')
   },
   filename: (req, file, callback) => {
-    const name = file.originalname.split(' ').join('_')
     const extension = MIME_TYPES[file.mimetype]
-    callback(null, name + Date.now() + '.' + extension)
+    const newName = filteringFiles(file.originalname, extension)
+    callback(null, newName)
   },
 })
 
-module.exports = multer({
+// const filteringFiles = (filename, ext) => {
+//   if (!filename.match(/\.(jpg|jpeg|png)$/)) {
+//     throw new Error('Merci de choisir une image')
+//   }
+//   const name = filename.split(' ').join('_')
+//   const newName = name + Date.now() + '.' + ext
+//   return newName
+// }
+
+const upload = multer({
   storage: storage,
   limits: {
     fileSize: 1000000,
   },
-  fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-      return cb(new Error('Merci de choisir un fichier image'))
-    }
-    cb(undefined, true)
-  },
 }).single('image')
+
+module.exports = upload

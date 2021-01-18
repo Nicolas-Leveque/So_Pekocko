@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
+const mongoSanitize = require('express-mongo-sanitize')
 
 const sauceSchema = mongoose.Schema({
   userId: { type: String, required: true },
@@ -38,6 +39,11 @@ const sauceSchema = mongoose.Schema({
 function sanitizeEntries(value) {
   return validator.escape(value)
 }
+
+// sauceSchema.pre('save', async function (next) {
+//   const sauce = this
+
+// })
 
 const Sauce = mongoose.model('Sauce', sauceSchema)
 
