@@ -1,10 +1,9 @@
-const filterFiles = (filename, ext) => {
+const filterFiles = (filename) => {
   if (!filename.match(/\.(jpg|jpeg|png)$/)) {
     throw new Error('Merci de choisir une image')
   }
   const name = filename.split(' ').join('_')
-  const newName = name + Date.now() + '.' + ext
-  console.log(newName)
+  const newName = Date.now() + '.' + name
   return newName
 }
 
