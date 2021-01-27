@@ -10,6 +10,21 @@ const model = mongoose.model(
 
 const store = new mongooseStore(model)
 
-const bruteforce = new ExpressBrute(store)
+const failcallback = function (req, res, next, nextValidRequestDate) {
+  req.flash(
+    'error',
+    'Vous avez fait trop de requêtes, veuillez patienter' +
+      moment(nextValidRequestDate).fromNow()
+  )
+  res.redirect('/login')
+}
+
+const bruteforce = new ExpressBrute(store, {
+  freeretries: 10,
+  attachResetToRequest: false,
+  refreshTimeoutOnRequest: false,
+  minWait: 5 * 60 * 1000, // 5 minutes
+  maxWait: 60 * 60 * 1000, // 1 hour
+})
 
 module.exports = bruteforce
