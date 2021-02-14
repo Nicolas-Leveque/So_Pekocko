@@ -20,7 +20,7 @@ const failcallback = function (req, res, next, nextValidRequestDate) {
 }
 
 const bruteforce = new ExpressBrute(store, {
-  freeretries: 10,
+  freeretries: 20,
   attachResetToRequest: false,
   refreshTimeoutOnRequest: false,
   minWait: 5 * 60 * 1000, // 5 minutes

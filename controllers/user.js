@@ -1,12 +1,15 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const CryptoJS = require('crypto-js')
 require('dotenv').config()
 
 exports.signup = async (req, res) => {
   const user = new User(req.body)
+  console.log(user)
   try {
     await user.save()
+    console.log('test1')
     res.send(user)
   } catch (e) {
     res.status(400).send(e)
@@ -15,7 +18,10 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email })
+    const hashedEmail = await CryptoJS.SHA256(req.body.email).toString(
+      CryptoJS.enc.Base64
+    )
+    const user = await User.findOne({ email: hashedEmail })
     if (!user) {
       throw new Error('Erreur de connexion')
     }
