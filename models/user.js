@@ -10,11 +10,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     trim: true,
-    // validate(value) {
-    //   if (!validator.isEmail(value)) {
-    //     throw new Error('Adresse email invalide')
-    //   }
-    // },
   },
   password: {
     type: String,
@@ -39,9 +34,7 @@ userSchema.pre('save', async function (next) {
   const user = this
   if (user.isModified('email')) {
     user.email = await CryptoJS.SHA256(user.email).toString(CryptoJS.enc.Base64)
-    console.log(user)
   }
-
   next()
 })
 

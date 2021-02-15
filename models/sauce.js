@@ -40,13 +40,6 @@ function sanitizeEntries(value) {
   return validator.escape(value)
 }
 
-sauceSchema.pre('save', async function (next) {
-  const sauce = this
-  if (mongoSanitize.has(sauce)) {
-    sauce = mongoSanitize.sanitize(sauce)
-  }
-})
-
 const Sauce = mongoose.model('Sauce', sauceSchema)
 
 module.exports = Sauce

@@ -6,10 +6,8 @@ require('dotenv').config()
 
 exports.signup = async (req, res) => {
   const user = new User(req.body)
-  console.log(user)
   try {
     await user.save()
-    console.log('test1')
     res.send(user)
   } catch (e) {
     res.status(400).send(e)

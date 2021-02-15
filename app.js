@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
+const mongoSanitize = require('express-mongo-sanitize')
 const mongoose = require('mongoose')
 const sauceRouter = require('./router/sauce')
 const userRouter = require('./router/user')
@@ -31,6 +32,11 @@ app.use((req, res, next) => {
 })
 
 app.use(bodyParser.json())
+app.use(
+  mongoSanitize({
+    replaceWith: '_',
+  })
+)
 
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
