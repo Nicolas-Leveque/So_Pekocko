@@ -20,3 +20,13 @@ Puis rendez vous sur
 
 Pour le backend un fichier dotenv est nécessaire pour la connexion à MongoDB, je vous le fournirai sur demande
 
+L'installation des dépendances se fait de cette façon:
+
+```
+npm install
+```
+On lance l'application avec la commande
+```
+npm run dev
+```
+
