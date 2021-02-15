@@ -25,7 +25,7 @@ const sauceSchema = mongoose.Schema({
   mainPepper: {
     type: String,
     required: true,
-    maxlength: 16,
+    maxlength: 32,
     set: sanitizeEntries,
   },
   imageUrl: { type: String, required: true },

@@ -32,11 +32,7 @@ app.use((req, res, next) => {
 })
 
 app.use(bodyParser.json())
-app.use(
-  mongoSanitize({
-    replaceWith: '_',
-  })
-)
+app.use(mongoSanitize())
 
 app.use('/images', express.static(path.join(__dirname, 'images')))
 

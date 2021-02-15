@@ -11,7 +11,6 @@ exports.createSauce = async (req, res) => {
         req.file.filename
       }`,
     })
-    console.log(sauce)
     await sauce.save()
     res.status(201).send({ message: 'Sauce enregistrée' })
   } catch (e) {
