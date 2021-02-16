@@ -1,5 +1,4 @@
 const express = require('express')
-const ExpressBrute = require('express-brute')
 const router = express.Router()
 const validateEmail = require('../middleware/validate-email')
 
